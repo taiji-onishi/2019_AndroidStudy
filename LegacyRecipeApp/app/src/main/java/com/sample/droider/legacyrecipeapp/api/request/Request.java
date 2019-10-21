@@ -1,6 +1,6 @@
 package com.sample.droider.legacyrecipeapp.api.request;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.sample.droider.legacyrecipeapp.api.HttpMethod;
 import com.sample.droider.legacyrecipeapp.api.RequestTag;

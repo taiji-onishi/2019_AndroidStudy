@@ -22,7 +22,7 @@ public class Recipe {
     @SerializedName("main_gazo")
     private String mainImageUrl;
     @SerializedName("recommended_flg")
-    private String reccomendFlg;
+    private String recommendFlg;
 
     public List<CookingIngredients> getCookingIngredients() {
         return cookingIngredients;
@@ -88,11 +88,11 @@ public class Recipe {
         this.mainImageUrl = mainImageUrl;
     }
 
-    public String getReccomendFlg() {
-        return reccomendFlg;
+    public String getRecommendFlg() {
+        return recommendFlg;
     }
 
-    public void setReccomendFlg(String reccomendFlg) {
-        this.reccomendFlg = reccomendFlg;
+    public void setRecommendFlg(String recommendFlg) {
+        this.recommendFlg = recommendFlg;
     }
 }
