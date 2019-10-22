@@ -92,7 +92,7 @@ public class RecipeListRecyclerAdapter extends RecyclerView.Adapter<RecipeListRe
         }
     }
 
-    interface OnItemClickListener {
+    public interface OnItemClickListener {
         void onClickItem(Recipe recipe);
     }
 }

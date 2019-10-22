@@ -1,5 +1,6 @@
 package com.sample.droider.legacyrecipeapp.activity;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
@@ -19,7 +20,7 @@ import com.sample.droider.legacyrecipeapp.util.DimensUtil;
 
 import java.util.List;
 
-public class RecipeListActivity extends AppCompatActivity implements ApiRequestTask.CallbackToMainThread<List<Recipe>> {
+public class RecipeListActivity extends AppCompatActivity implements ApiRequestTask.CallbackToMainThread<List<Recipe>>, RecipeListRecyclerAdapter.OnItemClickListener {
 
     private ApiRequestTask<List<Recipe>> task;
     private RecipeListRecyclerAdapter adapter;
@@ -45,6 +46,28 @@ public class RecipeListActivity extends AppCompatActivity implements ApiRequestT
         }
     }
 
+    @Override
+    public void onSuccess(List<Recipe> result) {
+        showList(result);
+    }
+
+    @Override
+    public void onError(ErrorCode errorCode, String errorMessage, Exception e) {
+        // TODO: エラー表示
+    }
+
+    @Override
+    public void onCancel() {
+        // nothing to do
+    }
+
+    @Override
+    public void onClickItem(Recipe recipe) {
+        Intent intent = new Intent(this, RecipeDetailActivity.class);
+        intent.putExtra(RecipeDetailActivity.INTENT_KEY, recipe.getRecipeId());
+        startActivity(intent);
+    }
+
     private void fetchRecipeList() {
         task = new ApiRequestTask<>(RecipeListRequest.createRequest(), this);
         task.execute(this);
@@ -53,6 +76,7 @@ public class RecipeListActivity extends AppCompatActivity implements ApiRequestT
     private void initAdapter() {
         if (adapter == null) {
             adapter = new RecipeListRecyclerAdapter(this);
+            adapter.setListener(this);
         }
         RecyclerView recyclerView = findViewById(R.id.recycler);
         recyclerView.setAdapter(adapter);
@@ -72,18 +96,7 @@ public class RecipeListActivity extends AppCompatActivity implements ApiRequestT
         });
     }
 
-    @Override
-    public void onSuccess(List<Recipe> result) {
+    private void showList(List<Recipe> result) {
         adapter.addAllRecipeList(result);
-    }
-
-    @Override
-    public void onError(ErrorCode errorCode, String errorMessage, Exception e) {
-
-    }
-
-    @Override
-    public void onCancel() {
-        // nothing to do
     }
 }

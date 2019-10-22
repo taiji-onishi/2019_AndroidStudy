@@ -2,4 +2,8 @@
     <string name="app_name">LegacyRecipeApp</string>
 
     <string name="label_recommend">おすすめ</string>
+    <string name="message_nw_error">読み込みができませんでした。\nしばらく時間をおいてお試しください。</string>
+    <string name="label_reload">タップして再読み込み</string>
+    <string name="label_ingredient">材料</string>
+    <string name="label_method">手順</string>
 </resources>
