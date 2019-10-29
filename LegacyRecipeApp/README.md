@@ -10,8 +10,8 @@
 ### 機能
 - レシピの一覧、詳細を持つ簡単なアプリです。
 
-<img src="/image/list.png" width="320"/>
-<img src="/image/detail.png" width="320"/>
+<img src="./image/list.png" width="320"/>
+<img src="./image/detail.png" width="320"/>
 
 ### 言語
 - Java
