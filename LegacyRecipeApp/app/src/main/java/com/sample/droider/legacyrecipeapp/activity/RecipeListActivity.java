@@ -17,6 +17,7 @@ import com.sample.droider.legacyrecipeapp.api.ErrorCode;
 import com.sample.droider.legacyrecipeapp.api.request.RecipeListRequest;
 import com.sample.droider.legacyrecipeapp.dto.Recipe;
 import com.sample.droider.legacyrecipeapp.util.DimensUtil;
+import com.sample.droider.legacyrecipeapp.api.FetchTask;
 
 import java.util.List;
 
@@ -71,6 +72,10 @@ public class RecipeListActivity extends AppCompatActivity implements ApiRequestT
     private void fetchRecipeList() {
         task = new ApiRequestTask<>(RecipeListRequest.createRequest(), this);
         task.execute(this);
+    }
+
+    private void fetchRecipeListForTest() {
+        new FetchTask().execute( new ApiRequestTask<>(RecipeListRequest.createRequest(), this,this));
     }
 
     private void initAdapter() {

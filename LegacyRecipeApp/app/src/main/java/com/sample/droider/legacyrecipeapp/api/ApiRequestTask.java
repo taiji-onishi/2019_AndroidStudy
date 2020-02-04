@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import com.sample.droider.legacyrecipeapp.api.request.Request;
 
@@ -22,8 +23,17 @@ public class ApiRequestTask<T> {
     /** UIスレッドへポストするためのHandler */
     private final Handler handler = new Handler(Looper.getMainLooper());
 
+    private Context context;
+
     public ApiRequestTask(Request<T> request, CallbackToMainThread<T> callbackToMainThread) {
         this.request = request;
+        apiManager = ApiManager.getApiManager();
+        this.callbackToMainThreadWeakReference = callbackToMainThread;
+    }
+
+    public ApiRequestTask(Request<T> request, CallbackToMainThread<T> callbackToMainThread,Context context) {
+        this.request = request;
+        this.context = context;
         apiManager = ApiManager.getApiManager();
         this.callbackToMainThreadWeakReference = callbackToMainThread;
     }
@@ -41,6 +51,13 @@ public class ApiRequestTask<T> {
         return this;
     }
 
+    public ApiRequestTask<T> executeWithoutContext() {
+        if (HttpMethod.GET == request.getHttpMethod()) {
+            executeGet(context);
+        }
+        return this;
+    }
+
     /**
      * キャンセル
      */
@@ -50,11 +67,16 @@ public class ApiRequestTask<T> {
         callbackToMainThreadWeakReference = null;
     }
 
+    public void executeGet(){
+        executeGet(context);
+    }
+
     /**
      * GET通信
      *
      * @param context Context
      */
+    @VisibleForTesting
     private void executeGet(@NonNull Context context) {
         apiManager.executeGet(request.getUrl(), context, request.getRequestTag(), new ApiManager.Callback() {
             @Override
