@@ -22,6 +22,7 @@ import com.sample.droider.legacyrecipeapp.api.request.DetailRequest;
 import com.sample.droider.legacyrecipeapp.dto.CookingIngredients;
 import com.sample.droider.legacyrecipeapp.dto.CookingMethod;
 import com.sample.droider.legacyrecipeapp.dto.Recipe;
+import com.sample.droider.legacyrecipeapp.dto.RecipeDataValidation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,8 +86,9 @@ public class RecipeDetailActivity extends AppCompatActivity implements ApiReques
 
     private List<DetailViewItem> createList(Recipe result) {
         List<DetailViewItem> list = new ArrayList<>();
+        RecipeDataValidation recipeDataValidation = new RecipeDataValidation();
 
-        if (!TextUtils.isEmpty(result.getMainImageUrl())) {
+        if (recipeDataValidation.isMainImageUrlValidate(result.getMainImageUrl())) {
             ImageViewItem imageViewItem = new ImageViewItem(result.getMainImageUrl());
             list.add(imageViewItem);
         }
