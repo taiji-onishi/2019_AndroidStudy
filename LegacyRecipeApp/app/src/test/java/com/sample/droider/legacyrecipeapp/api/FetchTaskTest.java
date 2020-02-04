@@ -11,14 +11,15 @@ import org.mockito.*;
 
 public class FetchTaskTest {
 
-    @Spy
-    private ApiRequestTask apiRequestTask;
+
     @Mock
     Context context;
     @Mock
     Request request;
     @Mock
     ApiRequestTask.CallbackToMainThread callbackToMainThread;
+    @Spy
+    ApiRequestTask apiRequestTask = new ApiRequestTask(request,callbackToMainThread,context);
 
     FetchTask fetchTask;
 
@@ -26,17 +27,19 @@ public class FetchTaskTest {
     @Before
     public void setUp() {
         fetchTask = new FetchTask();
-        context = Mockito.mock(Context.class);
-        request = Mockito.mock(Request.class);
-        callbackToMainThread = Mockito.mock(ApiRequestTask.CallbackToMainThread.class);
-
-        apiRequestTask = Mockito.spy(new ApiRequestTask(request, callbackToMainThread, context));
+        MockitoAnnotations.initMocks(this);
         Mockito.doReturn(apiRequestTask).when(apiRequestTask).executeWithoutContext();
         Mockito.doNothing().when(apiRequestTask).executeGet();
     }
 
     @Test
     public void callExecute(){
+        fetchTask.execute(apiRequestTask);
+        Mockito.verify(apiRequestTask,Mockito.times(1)).executeWithoutContext();
+    }
+
+    @Test
+    public void callExecuteGet(){
         fetchTask.execute(apiRequestTask);
         Mockito.verify(apiRequestTask,Mockito.times(1)).executeGet();
     }
