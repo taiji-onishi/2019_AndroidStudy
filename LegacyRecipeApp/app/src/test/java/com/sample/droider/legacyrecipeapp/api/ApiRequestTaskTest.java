@@ -4,18 +4,21 @@ import android.content.Context;
 
 import androidx.test.InstrumentationRegistry;
 
+import com.sample.droider.legacyrecipeapp.api.parser.RecipeListParser;
 import com.sample.droider.legacyrecipeapp.api.request.Request;
+import com.sample.droider.legacyrecipeapp.dto.Recipe;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Spy;
 import org.robolectric.RobolectricTestRunner;
 
-
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+
 
 import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
@@ -28,19 +31,18 @@ public class ApiRequestTaskTest {
 
     private MockWebServer server;
     ApiManager apiManager;
-
-    @Mock
     Request request;
-    @Mock
-    ApiRequestTask.CallbackToMainThread callbackToMainThread;
-    @Spy
-    ApiRequestTask apiRequestTask = new ApiRequestTask(request,callbackToMainThread);
-
 
     @Before
     public void setUp() throws Exception {
         server = new MockWebServer();
         apiManager = new ApiManager();
+
+        Request.Builder<List<Recipe>> builder = new Request.Builder<>();
+        builder.path("recipe")
+                .httpMethod(HttpMethod.GET)
+                .parser(new RecipeListParser());
+        request =  builder.build();
     }
 
     @After
@@ -51,30 +53,33 @@ public class ApiRequestTaskTest {
 
     @Test
     public void execute() throws IOException, InterruptedException {
-        // CountDownLatch
 
         server.enqueue(new MockResponse().setBody(body));
         server.start();
         Context context = InstrumentationRegistry.getTargetContext();
+        final CountDownLatch latch = new CountDownLatch(1);
 
         apiManager.executeGet (request.getUrl(), context, request.getRequestTag(), new ApiManager.Callback() {
             @Override
             public void onSuccess(final Response response) {
                 try {
-                    final Object result = request.getParser().parse(response.body().string());
+                    final List<Recipe> result = (List<Recipe>) request.getParser().parse(response.body().string());
+                    Recipe recipe = result.get(0);
+                    Assert.assertEquals("洋食屋さんのハンバーグ",recipe.getGenreName());
+
 
                 }catch (IOException e){
                     e.getMessage();
                 }
+                latch.countDown();
             }
 
             @Override
             public void onFailure(okhttp3.Request request, Exception e) {
                 }
-            }
-        );
+            });
+        latch.await();
     }
-
 
 
     private String body ="{\n" +

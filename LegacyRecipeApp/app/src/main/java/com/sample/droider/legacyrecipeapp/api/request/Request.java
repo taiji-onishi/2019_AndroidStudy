@@ -1,6 +1,7 @@
 package com.sample.droider.legacyrecipeapp.api.request;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import com.sample.droider.legacyrecipeapp.api.HttpMethod;
 import com.sample.droider.legacyrecipeapp.api.RequestTag;
@@ -34,33 +35,34 @@ public class Request<T> {
         this.parser = parser;
     }
 
-    static class Builder<T> {
+    @VisibleForTesting
+    public static class Builder<T> {
         private String path;
         private HttpMethod httpMethod;
         private Map<String, String> params;
         private ParseCallback<T> parser;
 
-        Builder<T> path(@NonNull String path) {
+        public Builder<T> path(@NonNull String path) {
             this.path = path;
             return this;
         }
 
-        Builder<T> httpMethod(@NonNull HttpMethod httpMethod) {
+        public Builder<T> httpMethod(@NonNull HttpMethod httpMethod) {
             this.httpMethod = httpMethod;
             return this;
         }
 
-        Builder<T> params(Map<String, String> params) {
+        public Builder<T> params(Map<String, String> params) {
             this.params = params;
             return this;
         }
 
-        Builder<T> parser(@NonNull ParseCallback<T> parser) {
+        public Builder<T> parser(@NonNull ParseCallback<T> parser) {
             this.parser = parser;
             return this;
         }
 
-        Request<T> build() {
+        public Request<T> build() {
             if (params == null) {
                 this.params = new HashMap<>();
             }
