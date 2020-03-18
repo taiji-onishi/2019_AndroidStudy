@@ -23,7 +23,7 @@ class ApiManager {
     private static ApiManager apiManager;
     private final OkHttpClient httpClient;
 
-    private ApiManager() {
+    public ApiManager() {
         httpClient = HttpClient.getOkHttpClient();
     }
 
